@@ -91,21 +91,11 @@ st.markdown("""
 # =========================
 
 tickers = selected_tickers
-    "RELIANCE.NS",
-    "TCS.NS",
-    "INFY.NS",
-    "HDFCBANK.NS",
-    "ICICIBANK.NS",
-    "SBIN.NS",
-    "LT.NS",
-    "AXISBANK.NS",
-    "KOTAKBANK.NS",
-    "ITC.NS"
-]
+    
 
 prices = yf.download(
     tickers,
-    start="2018-01-01",
+  start=start_date,
     auto_adjust=True
 )["Close"]
 
