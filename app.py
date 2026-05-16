@@ -9,7 +9,73 @@ st.set_page_config(
 )
 
 st.title("Institutional Quant Platform")
+st.sidebar.header("Quant Controls")
 
+selected_tickers = st.sidebar.multiselect(
+    "Select Stocks",
+    [
+        "RELIANCE.NS",
+        "TCS.NS",
+        "INFY.NS",
+        "HDFCBANK.NS",
+        "ICICIBANK.NS",
+        "SBIN.NS",
+        "LT.NS",
+        "AXISBANK.NS",
+        "KOTAKBANK.NS",
+        "ITC.NS"
+    ],
+
+    default=[
+        "RELIANCE.NS",
+        "TCS.NS",
+        "INFY.NS",
+        "HDFCBANK.NS"
+    ]
+)
+
+start_date = st.sidebar.date_input(
+    "Start Date",
+    pd.to_datetime("2018-01-01")
+)
+
+strategy_type = st.sidebar.selectbox(
+    "Strategy Type",
+    [
+        "Momentum",
+        "Low Volatility",
+        "Quality",
+        "Multi Factor"
+    ]
+)
+
+momentum_weight = st.sidebar.slider(
+    "Momentum Weight",
+    0.0,
+    1.0,
+    0.30
+)
+
+volatility_weight = st.sidebar.slider(
+    "Volatility Weight",
+    0.0,
+    1.0,
+    0.20
+)
+
+quality_weight = st.sidebar.slider(
+    "Quality Weight",
+    0.0,
+    1.0,
+    0.20
+)
+
+risk_weight = st.sidebar.slider(
+    "Risk Control Weight",
+    0.0,
+    1.0,
+    0.30
+)
 st.markdown("""
 ### Features
 - Quant factor scoring
