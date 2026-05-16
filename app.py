@@ -1,18 +1,17 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
-import matplotlib.pyplot as plt
+import yfinance as yf
 
 st.set_page_config(
     page_title="Institutional Quant Platform",
     layout="wide"
 )
 
-st.title("Institutional Quant Research Platform")
+st.title("Institutional Quant Platform")
 
 st.markdown("""
-Multi-factor alpha engine with:
+### Features
 - Quant factor scoring
 - Long/short portfolio
 - Regime detection
@@ -21,24 +20,9 @@ Multi-factor alpha engine with:
 - Tail risk analysis
 """)
 
-st.sidebar.header("Controls")
-
-selected_metric = st.sidebar.selectbox(
-    "Select Factor",
-    [
-        "CAGR",
-        "Momentum_12M",
-        "Sortino",
-        "Annualized_Volatility"
-    ]
-)
-
-st.subheader("Factor Table")
-
-st.dataframe(factor_table)
-import yfinance as yf
-import pandas as pd
-import numpy as np
+# =========================
+# DATA DOWNLOAD
+# =========================
 
 tickers = [
     "RELIANCE.NS",
@@ -61,14 +45,20 @@ prices = yf.download(
 
 returns = prices.pct_change().dropna()
 
+# =========================
+# FACTOR ENGINE
+# =========================
+
 summary_stats = pd.DataFrame({
     "CAGR": (
         (prices.iloc[-1] / prices.iloc[0]) **
         (252 / len(prices)) - 1
     ),
+
     "Volatility": (
         returns.std() * np.sqrt(252)
     ),
+
     "Sharpe": (
         (returns.mean() / returns.std()) * np.sqrt(252)
     )
@@ -85,9 +75,7 @@ momentum_df = pd.DataFrame({
 
 rolling_max = prices.rolling(252).max()
 
-drawdown = (
-    prices / rolling_max
-) - 1
+drawdown = (prices / rolling_max) - 1
 
 max_drawdown = drawdown.min()
 
@@ -97,9 +85,7 @@ drawdown_df = pd.DataFrame({
 
 downside_returns = returns.copy()
 
-downside_returns[
-    downside_returns > 0
-] = 0
+downside_returns[downside_returns > 0] = 0
 
 sortino_ratio = (
     returns.mean() /
@@ -118,37 +104,14 @@ factor_table = pd.concat([
 ], axis=1)
 
 factor_table = factor_table.round(4)
-st.subheader("Composite Alpha Scores")
 
-fig = px.bar(
-    factor_scores.reset_index(),
-    x="Ticker",
-    y="Composite_Alpha_Score",
-    color="Composite_Alpha_Score",
-    template="plotly_dark"
+# =========================
+# DASHBOARD
+# =========================
+
+st.header("Factor Table")
+
+st.dataframe(
+    factor_table,
+    use_container_width=True
 )
-
-st.plotly_chart(fig, use_container_width=True)
-
-st.subheader("Strategy vs Benchmark")
-
-fig2 = px.line(
-    x=strategy_cumulative.index,
-    y=strategy_cumulative.values,
-    labels={"x":"Date","y":"Portfolio Value"},
-    title="Long/Short Strategy"
-)
-
-st.plotly_chart(fig2, use_container_width=True)
-
-st.subheader("Feature Importance")
-
-fig3 = px.bar(
-    feature_importance,
-    x="Factor",
-    y="Importance",
-    template="plotly_dark",
-    color="Importance"
-)
-
-st.plotly_chart(fig3, use_container_width=True)
