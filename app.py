@@ -245,7 +245,57 @@ chart_data = pd.DataFrame({
 })
 
 st.line_chart(chart_data)
+# =========================
+# PERFORMANCE METRICS
+# =========================
 
+portfolio_cagr = (
+    (portfolio_cumulative.iloc[-1]) **
+    (252 / len(portfolio_returns))
+) - 1
+
+portfolio_volatility = (
+    portfolio_returns.std() *
+    np.sqrt(252)
+)
+
+portfolio_sharpe = (
+    portfolio_returns.mean() /
+    portfolio_returns.std()
+) * np.sqrt(252)
+
+portfolio_drawdown = (
+    portfolio_cumulative /
+    portfolio_cumulative.cummax() - 1
+).min()
+
+# =========================
+# KPI DASHBOARD
+# =========================
+
+st.header("Portfolio Analytics")
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric(
+    "CAGR",
+    f"{portfolio_cagr:.2%}"
+)
+
+col2.metric(
+    "Volatility",
+    f"{portfolio_volatility:.2%}"
+)
+
+col3.metric(
+    "Sharpe Ratio",
+    f"{portfolio_sharpe:.2f}"
+)
+
+col4.metric(
+    "Max Drawdown",
+    f"{portfolio_drawdown:.2%}"
+)
 # =========================
 # TOP STOCKS
 # =========================
