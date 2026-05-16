@@ -171,3 +171,89 @@ st.dataframe(
     factor_table,
     use_container_width=True
 )
+# =========================
+# FACTOR SCORE ENGINE
+# =========================
+
+factor_scores = pd.DataFrame(index=factor_table.index)
+
+factor_scores["CAGR_Score"] = (
+    factor_table["CAGR"].rank(pct=True)
+)
+
+factor_scores["Momentum_Score"] = (
+    factor_table["Momentum_12M"].rank(pct=True)
+)
+
+factor_scores["Volatility_Score"] = (
+    1 - factor_table["Volatility"].rank(pct=True)
+)
+
+factor_scores["Drawdown_Score"] = (
+    1 - factor_table["Max_Drawdown"].rank(pct=True)
+)
+
+factor_scores["Sortino_Score"] = (
+    factor_table["Sortino"].rank(pct=True)
+)
+
+factor_scores["Composite_Score"] = (
+    factor_scores["CAGR_Score"] * momentum_weight +
+    factor_scores["Momentum_Score"] * momentum_weight +
+    factor_scores["Volatility_Score"] * volatility_weight +
+    factor_scores["Drawdown_Score"] * risk_weight +
+    factor_scores["Sortino_Score"] * quality_weight
+)
+
+factor_scores = factor_scores.sort_values(
+    "Composite_Score",
+    ascending=False
+)
+
+# =========================
+# PORTFOLIO CONSTRUCTION
+# =========================
+
+top_stocks = factor_scores.head(3).index
+
+portfolio_returns = (
+    returns[top_stocks]
+    .mean(axis=1)
+)
+
+portfolio_cumulative = (
+    1 + portfolio_returns
+).cumprod()
+
+benchmark_returns = (
+    returns.mean(axis=1)
+)
+
+benchmark_cumulative = (
+    1 + benchmark_returns
+).cumprod()
+
+# =========================
+# PERFORMANCE CHART
+# =========================
+
+st.header("Portfolio Performance")
+
+chart_data = pd.DataFrame({
+    "Quant Portfolio": portfolio_cumulative,
+    "Benchmark": benchmark_cumulative
+})
+
+st.line_chart(chart_data)
+
+# =========================
+# TOP STOCKS
+# =========================
+
+st.header("Top Ranked Stocks")
+
+st.dataframe(
+    factor_scores[["Composite_Score"]]
+    .head(5),
+    use_container_width=True
+)
