@@ -90,7 +90,7 @@ st.markdown("""
 # DATA DOWNLOAD
 # =========================
 
-tickers = [
+tickers = selected_tickers
     "RELIANCE.NS",
     "TCS.NS",
     "INFY.NS",
