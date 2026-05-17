@@ -334,3 +334,24 @@ for i in range(simulation_runs):
     ).cumprod()
 
     mc_paths[i] = simulated_path
+# =========================
+# MONTE CARLO VISUALIZATION
+# =========================
+
+st.header("Monte Carlo Portfolio Simulation")
+
+fig_mc = px.line(
+    mc_paths,
+    template="plotly_dark"
+)
+
+fig_mc.update_layout(
+    height=700,
+    xaxis_title="Trading Days",
+    yaxis_title="Portfolio Value"
+)
+
+st.plotly_chart(
+    fig_mc,
+    use_container_width=True
+)
