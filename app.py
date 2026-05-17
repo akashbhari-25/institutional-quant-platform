@@ -18,48 +18,7 @@ st.set_page_config(
 st.title("Institutional Quant Platform")
 st.sidebar.header("Quant Controls")
 
-# =========================
-# KPI DASHBOARD
-# =========================
 
-portfolio_return = (
-    returns.mean().mean() * 252
-)
-
-portfolio_volatility = (
-    returns.std().mean() * np.sqrt(252)
-)
-
-portfolio_sharpe = (
-    portfolio_return /
-    portfolio_volatility
-)
-
-portfolio_drawdown = (
-    drawdown.min().mean()
-)
-
-col1, col2, col3, col4 = st.columns(4)
-
-col1.metric(
-    "Expected Return",
-    f"{portfolio_return:.2%}"
-)
-
-col2.metric(
-    "Portfolio Volatility",
-    f"{portfolio_volatility:.2%}"
-)
-
-col3.metric(
-    "Sharpe Ratio",
-    f"{portfolio_sharpe:.2f}"
-)
-
-col4.metric(
-    "Max Drawdown",
-    f"{portfolio_drawdown:.2%}"
-)
 
 selected_tickers = st.sidebar.multiselect(
     "Select Stocks",
@@ -201,6 +160,49 @@ sortino_ratio = (
 risk_metrics_df = pd.DataFrame({
     "Sortino": sortino_ratio
 })
+
+# =========================
+# KPI DASHBOARD
+# =========================
+
+portfolio_return = (
+    returns.mean().mean() * 252
+)
+
+portfolio_volatility = (
+    returns.std().mean() * np.sqrt(252)
+)
+
+portfolio_sharpe = (
+    portfolio_return /
+    portfolio_volatility
+)
+
+portfolio_drawdown = (
+    drawdown.min().mean()
+)
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric(
+    "Expected Return",
+    f"{portfolio_return:.2%}"
+)
+
+col2.metric(
+    "Portfolio Volatility",
+    f"{portfolio_volatility:.2%}"
+)
+
+col3.metric(
+    "Sharpe Ratio",
+    f"{portfolio_sharpe:.2f}"
+)
+
+col4.metric(
+    "Max Drawdown",
+    f"{portfolio_drawdown:.2%}"
+)
 
 factor_table = pd.concat([
     summary_stats,
