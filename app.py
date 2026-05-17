@@ -386,3 +386,33 @@ col2.metric(
     "95% CVaR",
     f"{cvar_95:.2%}"
 )
+# =========================
+# MACHINE LEARNING DATASET
+# =========================
+
+ml_data = factor_table.copy()
+
+future_returns = (
+    prices.pct_change(30)
+    .shift(-30)
+    .mean(axis=1)
+)
+
+future_return_value = future_returns.mean()
+
+ml_data["Future_Return"] = future_return_value
+
+ml_data = ml_data.dropna()
+
+features = [
+    "CAGR",
+    "Volatility",
+    "Sharpe",
+    "Momentum_12M",
+    "Max_Drawdown",
+    "Sortino"
+]
+
+X = ml_data[features]
+
+y = ml_data["Future_Return"]
