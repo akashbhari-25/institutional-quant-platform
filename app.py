@@ -416,3 +416,76 @@ features = [
 X = ml_data[features]
 
 y = ml_data["Future_Return"]
+# =========================
+# TRAIN TEST SPLIT
+# =========================
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.3,
+    random_state=42
+)
+# =========================
+# RANDOM FOREST MODEL
+# =========================
+
+model = RandomForestRegressor(
+    n_estimators=200,
+    max_depth=5,
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+
+model_score = r2_score(
+    y_test,
+    predictions
+)
+# =========================
+# FEATURE IMPORTANCE
+# =========================
+
+importance_df = pd.DataFrame({
+    "Factor": features,
+    "Importance": model.feature_importances_
+})
+
+importance_df = importance_df.sort_values(
+    "Importance",
+    ascending=False
+)
+
+st.header("AI Factor Importance")
+
+fig_importance = px.bar(
+    importance_df,
+    x="Factor",
+    y="Importance",
+    color="Importance",
+    template="plotly_dark"
+)
+
+st.plotly_chart(
+    fig_importance,
+    use_container_width=True
+)
+# =========================
+# AI MODEL METRICS
+# =========================
+
+st.header("AI Prediction Engine")
+
+col1, col2 = st.columns(2)
+
+col1.metric(
+    "Model R² Score",
+    f"{model_score:.4f}"
+)
+
+col2.metric(
+    "Training Samples",
+    len(X_train)
+)
