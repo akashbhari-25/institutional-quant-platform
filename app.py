@@ -214,10 +214,23 @@ factor_table = pd.concat([
 factor_table = factor_table.round(4)
 
 # =========================
+# PROFESSIONAL TABS
+# =========================
+
+tab1, tab2, tab3, tab4 = st.tabs([
+    "Overview",
+    "Risk Analytics",
+    "Portfolio Construction",
+    "Simulations"
+])
+
+# =========================
 # DASHBOARD
 # =========================
 
-st.header("Factor Table")
+with tab1:
+
+    st.header("Factor Table")
 
 st.dataframe(
     factor_table,
