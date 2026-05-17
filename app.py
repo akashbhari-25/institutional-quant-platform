@@ -448,3 +448,32 @@ st.plotly_chart(
     fig_drawdown,
     use_container_width=True
 )
+# =========================
+# PORTFOLIO ALLOCATION
+# =========================
+
+portfolio_weights = pd.Series(
+    1 / len(selected_tickers),
+    index=selected_tickers
+)
+
+allocation_df = pd.DataFrame({
+    "Stock": portfolio_weights.index,
+    "Weight": portfolio_weights.values
+})
+
+st.header("Portfolio Allocation")
+
+fig_allocation = px.pie(
+    allocation_df,
+    names="Stock",
+    values="Weight",
+    hole=0.4,
+    template="plotly_dark",
+    title="Portfolio Weight Distribution"
+)
+
+st.plotly_chart(
+    fig_allocation,
+    use_container_width=True
+)
