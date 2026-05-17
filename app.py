@@ -452,9 +452,19 @@ st.plotly_chart(
 # PORTFOLIO ALLOCATION
 # =========================
 
-portfolio_weights = pd.Series(
-    1 / len(selected_tickers),
-    index=selected_tickers
+factor_score = (
+    factor_table["Sharpe"]
+    +
+    factor_table["Momentum_12M"]
+    +
+    factor_table["Sortino"]
+)
+
+factor_score = factor_score.clip(lower=0)
+
+portfolio_weights = (
+    factor_score /
+    factor_score.sum()
 )
 
 allocation_df = pd.DataFrame({
