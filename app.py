@@ -373,11 +373,11 @@ st.dataframe(
     use_container_width=True
 )
 
-with tab2:
 # =========================
 # MONTE CARLO SIMULATION
 # =========================
-
+with tab2: 
+    
 simulation_days = 252
 
 simulation_runs = 200
