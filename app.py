@@ -381,7 +381,37 @@ col1.metric(
     "95% VaR",
     f"{var_95:.2%}"
 )
+# =========================
+# ROLLING SHARPE ANALYSIS
+# =========================
 
+portfolio_returns = returns.mean(axis=1)
+
+rolling_sharpe = (
+    portfolio_returns.rolling(126).mean()
+    /
+    portfolio_returns.rolling(126).std()
+) * np.sqrt(252)
+
+rolling_sharpe = rolling_sharpe.dropna()
+
+st.header("Rolling Sharpe Ratio")
+
+fig_sharpe = px.line(
+    rolling_sharpe,
+    template="plotly_dark",
+    title="6-Month Rolling Sharpe Ratio"
+)
+
+fig_sharpe.update_layout(
+    xaxis_title="Date",
+    yaxis_title="Sharpe Ratio"
+)
+
+st.plotly_chart(
+    fig_sharpe,
+    use_container_width=True
+)
 col2.metric(
     "95% CVaR",
     f"{cvar_95:.2%}"
