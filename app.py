@@ -307,3 +307,30 @@ st.dataframe(
     .head(5),
     use_container_width=True
 )
+# =========================
+# MONTE CARLO SIMULATION
+# =========================
+
+simulation_days = 252
+
+simulation_runs = 200
+
+portfolio_mean = portfolio_returns.mean()
+
+portfolio_std = portfolio_returns.std()
+
+mc_paths = pd.DataFrame()
+
+for i in range(simulation_runs):
+
+    simulated_returns = np.random.normal(
+        portfolio_mean,
+        portfolio_std,
+        simulation_days
+    )
+
+    simulated_path = (
+        1 + simulated_returns
+    ).cumprod()
+
+    mc_paths[i] = simulated_path
