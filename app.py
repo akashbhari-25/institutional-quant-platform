@@ -399,6 +399,8 @@ for i in range(simulation_runs):
     ).cumprod()
 
     mc_paths[i] = simulated_path
+
+with tab2:
 # =========================
 # MONTE CARLO VISUALIZATION
 # =========================
