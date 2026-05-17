@@ -4,6 +4,10 @@ import numpy as np
 import yfinance as yf
 import plotly.express as px
 
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
 st.set_page_config(
     page_title="Institutional Quant Platform",
     layout="wide"
