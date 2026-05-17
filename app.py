@@ -356,3 +356,29 @@ st.plotly_chart(
     fig_mc,
     use_container_width=True
 )
+# =========================
+# VALUE AT RISK
+# =========================
+
+var_95 = np.percentile(
+    portfolio_returns,
+    5
+)
+
+cvar_95 = portfolio_returns[
+    portfolio_returns <= var_95
+].mean()
+
+st.header("Tail Risk Metrics")
+
+col1, col2 = st.columns(2)
+
+col1.metric(
+    "95% VaR",
+    f"{var_95:.2%}"
+)
+
+col2.metric(
+    "95% CVaR",
+    f"{cvar_95:.2%}"
+)
