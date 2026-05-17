@@ -372,6 +372,8 @@ st.dataframe(
     .head(5),
     use_container_width=True
 )
+
+with tab2:
 # =========================
 # MONTE CARLO SIMULATION
 # =========================
@@ -399,8 +401,6 @@ for i in range(simulation_runs):
     ).cumprod()
 
     mc_paths[i] = simulated_path
-
-with tab2:
 # =========================
 # MONTE CARLO VISUALIZATION
 # =========================
