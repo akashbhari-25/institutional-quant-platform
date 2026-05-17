@@ -378,237 +378,237 @@ st.dataframe(
 # =========================
 with tab2: 
     
-simulation_days = 252
-
-simulation_runs = 200
-
-portfolio_mean = portfolio_returns.mean()
-
-portfolio_std = portfolio_returns.std()
-
-mc_paths = pd.DataFrame()
-
-for i in range(simulation_runs):
-
-    simulated_returns = np.random.normal(
-        portfolio_mean,
-        portfolio_std,
-        simulation_days
-    )
-
-    simulated_path = (
-        1 + simulated_returns
-    ).cumprod()
-
-    mc_paths[i] = simulated_path
-# =========================
-# MONTE CARLO VISUALIZATION
-# =========================
-
-st.header("Monte Carlo Portfolio Simulation")
-
-fig_mc = px.line(
-    mc_paths,
-    template="plotly_dark"
-)
-
-fig_mc.update_layout(
-    height=700,
-    xaxis_title="Trading Days",
-    yaxis_title="Portfolio Value"
-)
-
-st.plotly_chart(
-    fig_mc,
-    use_container_width=True
-)
-# =========================
-# VALUE AT RISK
-# =========================
-
-var_95 = np.percentile(
-    portfolio_returns,
-    5
-)
-
-cvar_95 = portfolio_returns[
-    portfolio_returns <= var_95
-].mean()
-
-st.header("Tail Risk Metrics")
-
-col1, col2 = st.columns(2)
-
-col1.metric(
-    "95% VaR",
-    f"{var_95:.2%}"
-)
-# =========================
-# ROLLING SHARPE ANALYSIS
-# =========================
-
-portfolio_returns = returns.mean(axis=1)
-
-rolling_sharpe = (
-    portfolio_returns.rolling(126).mean()
-    /
-    portfolio_returns.rolling(126).std()
-) * np.sqrt(252)
-
-rolling_sharpe = rolling_sharpe.dropna()
-
-st.header("Rolling Sharpe Ratio")
-
-fig_sharpe = px.line(
-    rolling_sharpe,
-    template="plotly_dark",
-    title="6-Month Rolling Sharpe Ratio"
-)
-
-fig_sharpe.update_layout(
-    xaxis_title="Date",
-    yaxis_title="Sharpe Ratio"
-)
-
-st.plotly_chart(
-    fig_sharpe,
-    use_container_width=True
-)
-col2.metric(
-    "95% CVaR",
-    f"{cvar_95:.2%}"
-)
-
-# =========================
-# ROLLING DRAWDOWN ANALYTICS
-# =========================
-
-portfolio_cumulative = (
-    1 + portfolio_returns
-).cumprod()
-
-rolling_peak = portfolio_cumulative.cummax()
-
-drawdown_series = (
-    portfolio_cumulative / rolling_peak
-) - 1
-
-st.header("Portfolio Drawdown Analysis")
-
-fig_drawdown = px.area(
-    drawdown_series,
-    template="plotly_dark",
-    title="Portfolio Drawdown Over Time"
-)
-
-fig_drawdown.update_layout(
-    xaxis_title="Date",
-    yaxis_title="Drawdown"
-)
-
-st.plotly_chart(
-    fig_drawdown,
-    use_container_width=True
-)
-# =========================
-# PORTFOLIO ALLOCATION
-# =========================
-
-factor_score = (
-    factor_table["Sharpe"]
-    +
-    factor_table["Momentum_12M"]
-    +
-    factor_table["Sortino"]
-)
-
-factor_score = factor_score.clip(lower=0)
-
-portfolio_weights = (
-    factor_score /
-    factor_score.sum()
-)
-
-allocation_df = pd.DataFrame({
-    "Stock": portfolio_weights.index,
-    "Weight": portfolio_weights.values
-})
-
-st.header("Portfolio Allocation")
-
-fig_allocation = px.pie(
-    allocation_df,
-    names="Stock",
-    values="Weight",
-    hole=0.4,
-    template="plotly_dark",
-    title="Portfolio Weight Distribution"
-)
-
-st.plotly_chart(
-    fig_allocation,
-    use_container_width=True
-)
-# =========================
-# EFFICIENT FRONTIER
-# =========================
-
-st.header("Efficient Frontier Optimization")
-
-mean_returns = returns.mean() * 252
-
-cov_matrix = returns.cov() * 252
-
-num_portfolios = 3000
-
-results = np.zeros((3, num_portfolios))
-
-weights_record = []
-
-for i in range(num_portfolios):
-
-    weights = np.random.random(len(selected_tickers))
-
-    weights /= np.sum(weights)
-
-    portfolio_return = np.sum(
-        mean_returns * weights
-    )
-
-    portfolio_volatility = np.sqrt(
-        np.dot(
-            weights.T,
-            np.dot(cov_matrix, weights)
+    simulation_days = 252
+    
+    simulation_runs = 200
+    
+    portfolio_mean = portfolio_returns.mean()
+    
+    portfolio_std = portfolio_returns.std()
+    
+    mc_paths = pd.DataFrame()
+    
+    for i in range(simulation_runs):
+    
+        simulated_returns = np.random.normal(
+            portfolio_mean,
+            portfolio_std,
+            simulation_days
         )
+    
+        simulated_path = (
+            1 + simulated_returns
+        ).cumprod()
+    
+        mc_paths[i] = simulated_path
+    # =========================
+    # MONTE CARLO VISUALIZATION
+    # =========================
+    
+    st.header("Monte Carlo Portfolio Simulation")
+    
+    fig_mc = px.line(
+        mc_paths,
+        template="plotly_dark"
     )
-
-    sharpe_ratio = (
-        portfolio_return /
-        portfolio_volatility
+    
+    fig_mc.update_layout(
+        height=700,
+        xaxis_title="Trading Days",
+        yaxis_title="Portfolio Value"
     )
-
-    results[0, i] = portfolio_return
-    results[1, i] = portfolio_volatility
-    results[2, i] = sharpe_ratio
-
-    weights_record.append(weights)
-
-efficient_df = pd.DataFrame({
-    "Return": results[0],
-    "Volatility": results[1],
-    "Sharpe": results[2]
-})
-
-fig_frontier = px.scatter(
-    efficient_df,
-    x="Volatility",
-    y="Return",
-    color="Sharpe",
-    template="plotly_dark",
-    title="Efficient Frontier Simulation"
-)
-
-st.plotly_chart(
-    fig_frontier,
-    use_container_width=True
-)
+    
+    st.plotly_chart(
+        fig_mc,
+        use_container_width=True
+    )
+    # =========================
+    # VALUE AT RISK
+    # =========================
+    
+    var_95 = np.percentile(
+        portfolio_returns,
+        5
+    )
+    
+    cvar_95 = portfolio_returns[
+        portfolio_returns <= var_95
+    ].mean()
+    
+    st.header("Tail Risk Metrics")
+    
+    col1, col2 = st.columns(2)
+    
+    col1.metric(
+        "95% VaR",
+        f"{var_95:.2%}"
+    )
+    # =========================
+    # ROLLING SHARPE ANALYSIS
+    # =========================
+    
+    portfolio_returns = returns.mean(axis=1)
+    
+    rolling_sharpe = (
+        portfolio_returns.rolling(126).mean()
+        /
+        portfolio_returns.rolling(126).std()
+    ) * np.sqrt(252)
+    
+    rolling_sharpe = rolling_sharpe.dropna()
+    
+    st.header("Rolling Sharpe Ratio")
+    
+    fig_sharpe = px.line(
+        rolling_sharpe,
+        template="plotly_dark",
+        title="6-Month Rolling Sharpe Ratio"
+    )
+    
+    fig_sharpe.update_layout(
+        xaxis_title="Date",
+        yaxis_title="Sharpe Ratio"
+    )
+    
+    st.plotly_chart(
+        fig_sharpe,
+        use_container_width=True
+    )
+    col2.metric(
+        "95% CVaR",
+        f"{cvar_95:.2%}"
+    )
+    
+    # =========================
+    # ROLLING DRAWDOWN ANALYTICS
+    # =========================
+    
+    portfolio_cumulative = (
+        1 + portfolio_returns
+    ).cumprod()
+    
+    rolling_peak = portfolio_cumulative.cummax()
+    
+    drawdown_series = (
+        portfolio_cumulative / rolling_peak
+    ) - 1
+    
+    st.header("Portfolio Drawdown Analysis")
+    
+    fig_drawdown = px.area(
+        drawdown_series,
+        template="plotly_dark",
+        title="Portfolio Drawdown Over Time"
+    )
+    
+    fig_drawdown.update_layout(
+        xaxis_title="Date",
+        yaxis_title="Drawdown"
+    )
+    
+    st.plotly_chart(
+        fig_drawdown,
+        use_container_width=True
+    )
+    # =========================
+    # PORTFOLIO ALLOCATION
+    # =========================
+    
+    factor_score = (
+        factor_table["Sharpe"]
+        +
+        factor_table["Momentum_12M"]
+        +
+        factor_table["Sortino"]
+    )
+    
+    factor_score = factor_score.clip(lower=0)
+    
+    portfolio_weights = (
+        factor_score /
+        factor_score.sum()
+    )
+    
+    allocation_df = pd.DataFrame({
+        "Stock": portfolio_weights.index,
+        "Weight": portfolio_weights.values
+    })
+    
+    st.header("Portfolio Allocation")
+    
+    fig_allocation = px.pie(
+        allocation_df,
+        names="Stock",
+        values="Weight",
+        hole=0.4,
+        template="plotly_dark",
+        title="Portfolio Weight Distribution"
+    )
+    
+    st.plotly_chart(
+        fig_allocation,
+        use_container_width=True
+    )
+    # =========================
+    # EFFICIENT FRONTIER
+    # =========================
+    
+    st.header("Efficient Frontier Optimization")
+    
+    mean_returns = returns.mean() * 252
+    
+    cov_matrix = returns.cov() * 252
+    
+    num_portfolios = 3000
+    
+    results = np.zeros((3, num_portfolios))
+    
+    weights_record = []
+    
+    for i in range(num_portfolios):
+    
+        weights = np.random.random(len(selected_tickers))
+    
+        weights /= np.sum(weights)
+    
+        portfolio_return = np.sum(
+            mean_returns * weights
+        )
+    
+        portfolio_volatility = np.sqrt(
+            np.dot(
+                weights.T,
+                np.dot(cov_matrix, weights)
+            )
+        )
+    
+        sharpe_ratio = (
+            portfolio_return /
+            portfolio_volatility
+        )
+    
+        results[0, i] = portfolio_return
+        results[1, i] = portfolio_volatility
+        results[2, i] = sharpe_ratio
+    
+        weights_record.append(weights)
+    
+    efficient_df = pd.DataFrame({
+        "Return": results[0],
+        "Volatility": results[1],
+        "Sharpe": results[2]
+    })
+    
+    fig_frontier = px.scatter(
+        efficient_df,
+        x="Volatility",
+        y="Return",
+        color="Sharpe",
+        template="plotly_dark",
+        title="Efficient Frontier Simulation"
+    )
+    
+    st.plotly_chart(
+        fig_frontier,
+        use_container_width=True
+    )
