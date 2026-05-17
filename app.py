@@ -417,3 +417,34 @@ col2.metric(
     f"{cvar_95:.2%}"
 )
 
+# =========================
+# ROLLING DRAWDOWN ANALYTICS
+# =========================
+
+portfolio_cumulative = (
+    1 + portfolio_returns
+).cumprod()
+
+rolling_peak = portfolio_cumulative.cummax()
+
+drawdown_series = (
+    portfolio_cumulative / rolling_peak
+) - 1
+
+st.header("Portfolio Drawdown Analysis")
+
+fig_drawdown = px.area(
+    drawdown_series,
+    template="plotly_dark",
+    title="Portfolio Drawdown Over Time"
+)
+
+fig_drawdown.update_layout(
+    xaxis_title="Date",
+    yaxis_title="Drawdown"
+)
+
+st.plotly_chart(
+    fig_drawdown,
+    use_container_width=True
+)
