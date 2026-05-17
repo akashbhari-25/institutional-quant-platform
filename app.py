@@ -8,6 +8,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 
+import plotly.graph_objects as go
+
 st.set_page_config(
     page_title="Institutional Quant Platform",
     layout="wide"
@@ -485,5 +487,68 @@ fig_allocation = px.pie(
 
 st.plotly_chart(
     fig_allocation,
+    use_container_width=True
+)
+# =========================
+# EFFICIENT FRONTIER
+# =========================
+
+st.header("Efficient Frontier Optimization")
+
+mean_returns = returns.mean() * 252
+
+cov_matrix = returns.cov() * 252
+
+num_portfolios = 3000
+
+results = np.zeros((3, num_portfolios))
+
+weights_record = []
+
+for i in range(num_portfolios):
+
+    weights = np.random.random(len(selected_tickers))
+
+    weights /= np.sum(weights)
+
+    portfolio_return = np.sum(
+        mean_returns * weights
+    )
+
+    portfolio_volatility = np.sqrt(
+        np.dot(
+            weights.T,
+            np.dot(cov_matrix, weights)
+        )
+    )
+
+    sharpe_ratio = (
+        portfolio_return /
+        portfolio_volatility
+    )
+
+    results[0, i] = portfolio_return
+    results[1, i] = portfolio_volatility
+    results[2, i] = sharpe_ratio
+
+    weights_record.append(weights)
+
+efficient_df = pd.DataFrame({
+    "Return": results[0],
+    "Volatility": results[1],
+    "Sharpe": results[2]
+})
+
+fig_frontier = px.scatter(
+    efficient_df,
+    x="Volatility",
+    y="Return",
+    color="Sharpe",
+    template="plotly_dark",
+    title="Efficient Frontier Simulation"
+)
+
+st.plotly_chart(
+    fig_frontier,
     use_container_width=True
 )
