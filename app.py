@@ -605,7 +605,7 @@ weights_record = []
 
 for i in range(num_portfolios):
 
-    weights = np.random.random(len(selected_tickers))
+weights = np.random.random(len(prices.columns))
 
     weights /= np.sum(weights)
 
