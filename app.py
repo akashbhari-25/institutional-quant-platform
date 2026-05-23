@@ -18,17 +18,6 @@ st.set_page_config(
 st.title("Institutional Quant Platform")
 st.sidebar.header("Quant Controls")
 
-selected_tickers = st.sidebar.multiselect(
-    "Select Stocks",
-    nifty50_tickers,
-
-    default=[
-        "RELIANCE.NS",
-        "TCS.NS",
-        "INFY.NS",
-        "HDFCBANK.NS"
-    ]
-)
 # =========================
 # NIFTY 50 UNIVERSE
 # =========================
@@ -90,6 +79,19 @@ nifty50_tickers = [
     "HDFCLIFE.NS",
     "BAJAJ-AUTO.NS"
 ]
+
+
+selected_tickers = st.sidebar.multiselect(
+    "Select Stocks",
+    nifty50_tickers,
+
+    default=[
+        "RELIANCE.NS",
+        "TCS.NS",
+        "INFY.NS",
+        "HDFCBANK.NS"
+    ]
+)
 
 start_date = st.sidebar.date_input(
     "Start Date",
