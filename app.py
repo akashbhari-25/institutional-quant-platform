@@ -18,22 +18,9 @@ st.set_page_config(
 st.title("Institutional Quant Platform")
 st.sidebar.header("Quant Controls")
 
-
-
 selected_tickers = st.sidebar.multiselect(
     "Select Stocks",
-    [
-        "RELIANCE.NS",
-        "TCS.NS",
-        "INFY.NS",
-        "HDFCBANK.NS",
-        "ICICIBANK.NS",
-        "SBIN.NS",
-        "LT.NS",
-        "AXISBANK.NS",
-        "KOTAKBANK.NS",
-        "ITC.NS"
-    ],
+    nifty50_tickers,
 
     default=[
         "RELIANCE.NS",
