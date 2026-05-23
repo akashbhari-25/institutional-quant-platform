@@ -158,6 +158,7 @@ prices = yf.download(
     auto_adjust=True
 )["Close"]
 
+prices = prices.dropna(axis=1)
 returns = prices.pct_change().dropna()
 
 # =========================
