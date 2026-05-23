@@ -400,7 +400,9 @@ benchmark_prices = yf.download(
     "^NSEI",
     start=start_date,
     auto_adjust=True
-)["Close"]
+)
+
+benchmark_prices = benchmark_prices["Close"].squeeze()
 
 benchmark_returns = (
     benchmark_prices.pct_change()
