@@ -42,6 +42,67 @@ selected_tickers = st.sidebar.multiselect(
         "HDFCBANK.NS"
     ]
 )
+# =========================
+# NIFTY 50 UNIVERSE
+# =========================
+
+nifty50_tickers = [
+
+    "RELIANCE.NS",
+    "TCS.NS",
+    "INFY.NS",
+    "HDFCBANK.NS",
+    "ICICIBANK.NS",
+    "SBIN.NS",
+    "LT.NS",
+    "AXISBANK.NS",
+    "KOTAKBANK.NS",
+    "ITC.NS",
+
+    "ASIANPAINT.NS",
+    "BAJFINANCE.NS",
+    "BAJAJFINSV.NS",
+    "BHARTIARTL.NS",
+    "BPCL.NS",
+    "BRITANNIA.NS",
+    "CIPLA.NS",
+    "COALINDIA.NS",
+    "DIVISLAB.NS",
+    "DRREDDY.NS",
+
+    "EICHERMOT.NS",
+    "GRASIM.NS",
+    "HCLTECH.NS",
+    "HDFC.NS",
+    "HEROMOTOCO.NS",
+    "HINDALCO.NS",
+    "HINDUNILVR.NS",
+    "INDUSINDBK.NS",
+    "JSWSTEEL.NS",
+    "MARUTI.NS",
+
+    "NESTLEIND.NS",
+    "NTPC.NS",
+    "ONGC.NS",
+    "POWERGRID.NS",
+    "SBILIFE.NS",
+    "SHREECEM.NS",
+    "SUNPHARMA.NS",
+    "TATACONSUM.NS",
+    "TATAMOTORS.NS",
+    "TATASTEEL.NS",
+
+    "TECHM.NS",
+    "TITAN.NS",
+    "ULTRACEMCO.NS",
+    "UPL.NS",
+    "WIPRO.NS",
+    "ADANIENT.NS",
+    "ADANIPORTS.NS",
+    "APOLLOHOSP.NS",
+    "HDFCLIFE.NS",
+    "BAJAJ-AUTO.NS"
+]
 
 start_date = st.sidebar.date_input(
     "Start Date",
@@ -99,11 +160,11 @@ st.markdown("""
 # DATA DOWNLOAD
 # =========================
 
-tickers = selected_tickers
+tickers = nifty50_tickers
     
 
 prices = yf.download(
-    tickers,
+    nifty50_tickers,
   start=start_date,
     auto_adjust=True
 )["Close"]
