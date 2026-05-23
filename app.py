@@ -392,14 +392,24 @@ portfolio_cumulative = (
     1 + portfolio_returns
 ).cumprod()
 
+# =========================
+# NIFTY50 BENCHMARK
+# =========================
+
+benchmark_prices = yf.download(
+    "^NSEI",
+    start=start_date,
+    auto_adjust=True
+)["Close"]
+
 benchmark_returns = (
-    returns.mean(axis=1)
+    benchmark_prices.pct_change()
+    .dropna()
 )
 
 benchmark_cumulative = (
     1 + benchmark_returns
 ).cumprod()
-
 # =========================
 # PERFORMANCE CHART
 # =========================
