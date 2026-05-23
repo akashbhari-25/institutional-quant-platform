@@ -11,11 +11,11 @@ from sklearn.metrics import r2_score
 import plotly.graph_objects as go
 
 st.set_page_config(
-    page_title="Institutional Quant Platform",
+    page_title="Quant Portfolio Intelligence Platform",
     layout="wide"
 )
 
-st.title("Institutional Quant Platform")
+st.title("Quant Portfolio Intelligence Platform")
 st.markdown("""
 
 ### Institutional Strategy Thesis
